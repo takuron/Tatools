@@ -8,4 +8,7 @@ export default defineConfig({
         svelte(),
         tailwindcss()
     ],
+    build: {
+        outDir:'docs'
+    },
 })
