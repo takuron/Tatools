@@ -1,18 +1,22 @@
+<script>
+    import active from 'svelte-spa-router/active'
+</script>
+
 <ul class="menu bg-base-200 rounded-box w-56">
-    <li><a>欢迎</a></li>
+    <li><a href="/" use:active = "{ {className: 'menu-active', inactiveClassName: 'inactive'}}">欢迎 - Wealcome</a></li>
     <li>
-        <a>Parent</a>
+        <h2 class="menu-title">密码工具 - Password Tools</h2>
         <ul>
-            <li><a href="#Test">Submenu 1</a></li>
-            <li><a>Submenu 2</a></li>
-            <li>
-                <a>Parent</a>
-                <ul>
-                    <li><a>Submenu 1</a></li>
-                    <li><a>Submenu 2</a></li>
-                </ul>
-            </li>
+            <li><a use:active = "{ {className: 'menu-active', inactiveClassName: 'inactive'}}" href="#/seekpassword">SeekPassword</a></li>
+            <li class="menu-disabled" ><a use:active = "{ {className: 'menu-active', inactiveClassName: 'inactive'}}" href="#/mokapassword">MokaPassword</a></li>
+            <li class="menu-disabled" ><a use:active = "{ {className: 'menu-active', inactiveClassName: 'inactive'}}" href="#/randompassword">RandomPassword</a></li>
         </ul>
     </li>
-    <li><a>Item 3</a></li>
+    <li>
+        <h2 class="menu-title">文本工具 - Textual Tools</h2>
+        <ul>
+            <li class="menu-disabled" ><a use:active = "{ {className: 'menu-active', inactiveClassName: 'inactive'}}" href="#/talkwithbuddha">与佛论禅<br>TalkWithBuddha</a></li>
+            <li class="menu-disabled" ><a use:active = "{ {className: 'menu-active', inactiveClassName: 'inactive'}}" href="#/randompassword">RandomPassword</a></li>
+        </ul>
+    </li>
 </ul>

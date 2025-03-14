@@ -1,6 +1,15 @@
 <script lang="ts">
     import Menu from "./lib/Menu.svelte";
-    import PageWealcome from "./lib/PageWealcome.svelte";
+    import PageWealcome from "./page/PageWealcome.svelte";
+
+    import Wealcome from './page/PageWealcome.svelte'
+    import SeekPassword from "./page/PageSeekPassword.svelte";
+    import Router from "svelte-spa-router";
+
+    const routes = {
+        '/': Wealcome,
+        '/seekpassword': SeekPassword,
+    }
 </script>
 
 <main data-theme="winter">
@@ -31,7 +40,7 @@
                     </div>
 
                     <div class="card bg-base-100 shadow-sm w-max flex-100 mt-6 ml-4 mr-4">
-                        <PageWealcome></PageWealcome>
+                        <Router {routes}/>
                     </div>
 
                 </div>
