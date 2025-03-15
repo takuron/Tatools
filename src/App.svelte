@@ -1,6 +1,5 @@
 <script lang="ts">
     import Menu from "./lib/Menu.svelte";
-    import PageWealcome from "./page/PageWealcome.svelte";
 
     import Wealcome from './page/PageWealcome.svelte'
     import SeekPassword from "./page/PageSeekPassword.svelte";
