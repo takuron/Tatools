@@ -1,35 +1,32 @@
-
 <script lang="ts">
-    import {generate_password} from "../lib/SeekPasswordUtils"
-    function generator() {
-        const pwd = document.getElementById("input_password")!!;
-        const key = document.getElementById("input_key")!!;
-        const sk_pwd = generate_password("123", "123");
+    import {generatePassword} from "../lib/SeekPasswordUtils"
 
-        document.getElementById("input_epassword")!!.nodeValue = sk_pwd!!;
-        // if (sk_pwd) {
-        //     if (document.getElementById("cb_remove").checked == true) {
-        //         document.getElementById("code").value = sk_pwd.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()@\+\?><\[\]\+]/g, "");
-        //     } else {
-        //         document.getElementById("code").value = sk_pwd;
-        //     }
-        // }
-    }
+    let passwordInput = $state("")
+    let distinguishCodeInput = $state("")
+    let passwordEOutput = $state("")
 
-    document.getElementById("btn_gencode")!!.onclick = function () {
-        generator()
+    function handleGenerate() {
+        passwordEOutput = generatePassword(passwordInput, distinguishCodeInput)
     }
 </script>
 
 <div class="max-w-screen-2xl m-6   flex flex-wrap">
     <fieldset class="fieldset w-96">
         <legend class="fieldset-legend">记忆密码 - Memory Password</legend>
-        <input id="input_password" type="password" class="input" placeholder="Memory Password"/>
+        <input class="input"
+               id="input_password"
+               type="password"
+               bind:value={passwordInput}
+               placeholder="Memory Password"/>
     </fieldset>
 
     <fieldset class="fieldset w-96">
         <legend class="fieldset-legend">区分代码 - Distinguish Code</legend>
-        <input id="input_key" type="password" class="input" placeholder="Distinguish Code"/>
+        <input class="input"
+               id="input_key"
+               type="password"
+               bind:value={distinguishCodeInput}
+               placeholder="Distinguish Code"/>
     </fieldset>
 
     <fieldset class="fieldset w-64">
@@ -42,11 +39,14 @@
 </div>
 
 <div class="max-w-screen-2xl mt-6 mb-12 ml-6 mr-6 flex flex-nowrap">
-    <button id="btn_gencode" class="btn btn-primary">生成 - Generate</button>
+    <button id="btn_gencode" class="btn btn-primary" onclick={handleGenerate}>生成 - Generate</button>
 
     <div class="join ml-4">
         <label class="input validator join-item">
-            <input id="input_epassword" type="text" placeholder="Encrypted Password" disabled>
+            <input id="input_epassword" type="text"
+                   bind:value={passwordEOutput}
+                   placeholder="Encrypted Password"
+                   disabled>
         </label>
         <button class="btn btn-neutral join-item">Copy</button>
     </div>
