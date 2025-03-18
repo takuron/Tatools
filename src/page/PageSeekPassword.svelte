@@ -28,6 +28,7 @@
     async function handleCopy() {
         if (passwordEOutput == "") {
             infoMsg = InfoMsg.CP_EMPTY
+            return
         }
         try {
             await navigator.clipboard.writeText(passwordEOutput);
