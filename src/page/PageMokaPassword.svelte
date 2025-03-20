@@ -1,6 +1,6 @@
 <script lang="ts">
     import {generatePassword} from "../lib/SeekPasswordUtils"
-    import {InfoMsg} from "./PageSeekPassword"
+    import {InfoMsg} from "./PageMokaPassword"
 
     let passwordInput = $state("")
     let distinguishCodeInput = $state("")
@@ -8,18 +8,17 @@
 
     let infoMsg = $state(InfoMsg.NO_MSG)
 
-    let generationMode = $state("default")
+    let generationMode = $state("nlse")
 
     function handleGenerate() {
-        if(passwordInput==""||distinguishCodeInput==""){
+        if (passwordInput == "" || distinguishCodeInput == "") {
             infoMsg = InfoMsg.INPUT_EMPTY;
             return
         }
-        if(generationMode=="default"){
+        if (generationMode == "default") {
             infoMsg = InfoMsg.NO_MSG;
             passwordEOutput = generatePassword(passwordInput, distinguishCodeInput)
-        }
-        else{
+        } else {
             infoMsg = InfoMsg.NO_MSG;
             passwordEOutput = generatePassword(passwordInput, distinguishCodeInput).replace(/[.,-\/#!$%^&*;:{}=\-_`~()@+?><\[\]]/g, "")
         }
@@ -81,7 +80,6 @@
     </fieldset>
 
 
-
     <fieldset class="fieldset w-96">
         <legend class="fieldset-legend">记忆密码 - Memory Password</legend>
         <input class="input"
@@ -103,8 +101,9 @@
     <fieldset class="fieldset w-64">
         <legend class="fieldset-legend">生成模式 - Generation Mode</legend>
         <select class="select w-64" bind:value={generationMode}>
-            <option selected value="default">默认 - Default</option>
-            <option value="no_punctuation">去除标点 - Remove punctuation</option>
+            <option value="nls">字母数字符号 - Number&Letter&Symbol</option>
+            <option value="nl">字母数字 - Number&Letter</option>
+            <option value="nlse">去除易混淆字母数字符号 - Number&Letter&Symbol-E</option>
         </select>
     </fieldset>
 </div>
@@ -123,3 +122,37 @@
     </div>
 </div>
 
+<div class="max-w-screen-2xl mt-6 mb-12 ml-6 mr-6 flex flex-nowrap">
+
+    <div tabindex="0" class="collapse collapse-arrow bg-base-100 border-base-300 border">
+        <input type="checkbox"/>
+        <div class="collapse-title font-semibold">高级设置 - Advanced settings</div>
+        <div class="collapse-content text-sm flex flex-wrap">
+            <fieldset class="fieldset w-96">
+                <legend class="fieldset-legend">平台代码 - Platform Id</legend>
+                <input class="input"
+                       id="input_password"
+                       type="password"
+                       bind:value={passwordInput}
+                       placeholder="Memory Password"/>
+            </fieldset>
+
+            <div class="max-w-xs w-96 ">
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">密码长度 - Password Length</legend>
+                </fieldset>
+                <input type="range" min="8" max="32" value="16" class="range" step="4"/>
+                <div class="flex justify-between px-2.5 mt-2 text-xs">
+                    <span>8</span>
+                    <span>12</span>
+                    <span>16</span>
+                    <span>20</span>
+                    <span>24</span>
+                    <span>28</span>
+                    <span>32</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -2,12 +2,14 @@
     import Menu from "./lib/Menu.svelte";
 
     import Wealcome from './page/PageWealcome.svelte'
-    import SeekPassword from "./page/PageSeekPassword.svelte";
+    import PageSeekPassword from "./page/PageSeekPassword.svelte";
+    import PageMokaPassword from "./page/PageMokaPassword.svelte";
     import Router from "svelte-spa-router";
 
     const routes = {
         '/': Wealcome,
-        '/seekpassword': SeekPassword,
+        '/seekpassword': PageSeekPassword,
+        '/mokapassword': PageMokaPassword,
     }
 </script>
 
@@ -26,7 +28,7 @@
                                       d="M4 6h16M4 12h8m-8 6h16"/>
                             </svg>
                         </label>
-                        <a class="btn btn-ghost text-xl" href="#">TaTools</a>
+                        <a class="btn btn-ghost text-xl" href="./">TaTools</a>
                     </div>
                     <div class="navbar-end">
 
