@@ -1,6 +1,9 @@
 <script lang="ts">
     import {generatePassword} from "../lib/SeekPasswordUtils"
     import {InfoMsg} from "./PageMokaPassword"
+    import MokaPassword from "../lib/MokaPasswordV2Utils";
+
+    console.log(MokaPassword.mokaPasswordV2("dfvsdgs90gsdf","dfsdfs",MokaPassword.mappingNLSE))
 
     let passwordInput = $state("")
     let distinguishCodeInput = $state("")
