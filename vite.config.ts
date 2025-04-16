@@ -7,8 +7,5 @@ export default defineConfig({
     plugins: [
         svelte(),
         tailwindcss()
-    ],
-    build: {
-        outDir:'docs'
-    },
+    ]
 })

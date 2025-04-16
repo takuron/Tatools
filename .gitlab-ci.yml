@@ -1,0 +1,52 @@
+# 使用包含 Node.js 环境的 Docker 镜像
+image: node:18-alpine
+
+# 定义 CI/CD 阶段
+stages:
+  - build
+  - deploy
+
+# 定义缓存，加快后续构建速度
+cache:
+  key:
+    files:
+      - package-lock.json # 如果使用 yarn，请改为 yarn.lock
+  paths:
+    - node_modules/
+  policy: pull-push
+
+# 定义名为 'pages' 的作业，用于部署到 GitLab Pages
+pages:
+  stage: deploy
+  script:
+    # 1. 安装项目依赖
+    # 如果你使用 yarn，请将 'npm install' 改为 'yarn install'
+    - npm install
+
+    # 2. 构建 Vite 项目
+    # 通常 Vite 项目的构建命令是 'npm run build'，它会执行 'vite build'
+    # Vite 默认将构建产物输出到 'dist' 目录
+    # 如果你使用 yarn，请将 'npm run build' 改为 'yarn build'
+    - pnpm run build
+
+    # 3. 将构建产物从 'dist' 目录移动到 GitLab Pages 需要的 'public' 目录
+    # Vite 默认输出到 'dist'，但 GitLab Pages 要求是 'public'
+    # 如果你在 vite.config.js 中修改了 'build.outDir'，请相应修改这里的 'dist'
+    - mv dist public
+
+  artifacts:
+    paths:
+      # 声明 'public' 目录为构建产物 (artifact)
+      # GitLab Pages 会从此目录部署内容
+      - public
+
+  rules:
+    # 仅在推送到默认分支 (通常是 main 或 master) 时运行此作业
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+
+# 你可以根据需要添加其他作业，如 Linting 或 Testing
+# lint:
+#   stage: build
+#   script:
+#     - npm install
+#     - npm run lint # 假设你有 lint 脚本
