@@ -25,7 +25,7 @@ build_pages:
   script:
     # 1. 安装项目依赖
     # 如果你使用 yarn，请将 'npm install' 改为 'yarn install'
-    - pnpm install --production
+    - pnpm install
 
     # 2. 构建 Vite 项目
     # 通常 Vite 项目的构建命令是 'npm run build'，它会执行 'vite build'
