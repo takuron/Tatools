@@ -3,35 +3,29 @@ image: node:latest
 
 # 定义 CI/CD 阶段
 stages:
-  - setup
-  - build
   - deploy
 
-## 定义缓存，加快后续构建速度
-#cache:
-#  key:
-#    files:
-#      - pnpm.lock # 如果使用 yarn，请改为 yarn.lock
-#  paths:
-#    - node_modules/
-#  policy: pull-push
-
-install_pnpm:
-  stage: setup
-  script:
-    - npm install -g pnpm
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - .pnpm-store
+# 定义缓存，加快后续构建速度
+cache:
+  key:
+    files:
+      - pnpm-lock.yaml
+  paths:
+    - .pnpm-store
 
 # 定义名为 'pages' 的作业，用于部署到 GitLab Pages
-pages:
+build_pages:
   stage: deploy
+  before_script:
+    - npm install --global corepack@latest
+    - corepack enable
+    - corepack prepare pnpm@latest-10 --activate
+    - pnpm config set store-dir .pnpm-store
+
   script:
     # 1. 安装项目依赖
     # 如果你使用 yarn，请将 'npm install' 改为 'yarn install'
-    - pnpm install
+    - pnpm install --production
 
     # 2. 构建 Vite 项目
     # 通常 Vite 项目的构建命令是 'npm run build'，它会执行 'vite build'
