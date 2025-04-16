@@ -36,17 +36,17 @@ build_pages:
     # 3. 将构建产物从 'dist' 目录移动到 GitLab Pages 需要的 'public' 目录
     # Vite 默认输出到 'dist'，但 GitLab Pages 要求是 'public'
     # 如果你在 vite.config.js 中修改了 'build.outDir'，请相应修改这里的 'dist'
-    - mv dist public
+    - mv dist _page_public
 
   artifacts:
     paths:
       # 声明 'public' 目录为构建产物 (artifact)
       # GitLab Pages 会从此目录部署内容
-      - public
+      - _page_public
 
   pages:
     # The folder that contains the files to be exposed at the Page URL
-    publish: public
+    publish: _page_public
 
   rules:
     # 仅在推送到默认分支 (通常是 main 或 master) 时运行此作业
