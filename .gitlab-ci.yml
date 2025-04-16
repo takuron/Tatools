@@ -42,7 +42,11 @@ build_pages:
     paths:
       # 声明 'public' 目录为构建产物 (artifact)
       # GitLab Pages 会从此目录部署内容
-      - public
+      - publi
+
+  pages:
+    # The folder that contains the files to be exposed at the Page URL
+    publish: public
 
   rules:
     # 仅在推送到默认分支 (通常是 main 或 master) 时运行此作业
