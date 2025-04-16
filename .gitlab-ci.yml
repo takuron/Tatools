@@ -1,19 +1,29 @@
 # 使用包含 Node.js 环境的 Docker 镜像
-image: node:18-alpine
+image: node:latest
 
 # 定义 CI/CD 阶段
 stages:
+  - setup
   - build
   - deploy
 
-# 定义缓存，加快后续构建速度
-cache:
-  key:
-    files:
-      - package-lock.json # 如果使用 yarn，请改为 yarn.lock
-  paths:
-    - node_modules/
-  policy: pull-push
+## 定义缓存，加快后续构建速度
+#cache:
+#  key:
+#    files:
+#      - pnpm.lock # 如果使用 yarn，请改为 yarn.lock
+#  paths:
+#    - node_modules/
+#  policy: pull-push
+
+install_pnpm:
+  stage: setup
+  script:
+    - npm install -g pnpm
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .pnpm-store
 
 # 定义名为 'pages' 的作业，用于部署到 GitLab Pages
 pages:
