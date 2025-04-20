@@ -1,9 +1,6 @@
 <script lang="ts">
-    import {generatePassword} from "../lib/SeekPasswordUtils"
     import {InfoMsg} from "./PageMokaPassword"
     import MokaPassword from "../lib/MokaPasswordV2Utils";
-
-    console.log(MokaPassword.mokaPasswordV2("dfvsdgs90gsdf","dfsdfs",MokaPassword.mappingNLSE))
 
     let passwordInput = $state("")
     let distinguishCodeInput = $state("")
@@ -12,18 +9,28 @@
     let infoMsg = $state(InfoMsg.NO_MSG)
 
     let generationMode = $state("nlse")
+    let platformId = $state("")
+    let passwordLegend = $state(16)
 
     function handleGenerate() {
         if (passwordInput == "" || distinguishCodeInput == "") {
             infoMsg = InfoMsg.INPUT_EMPTY;
             return
         }
-        if (generationMode == "default") {
-            infoMsg = InfoMsg.NO_MSG;
-            passwordEOutput = generatePassword(passwordInput, distinguishCodeInput)
-        } else {
-            infoMsg = InfoMsg.NO_MSG;
-            passwordEOutput = generatePassword(passwordInput, distinguishCodeInput).replace(/[.,-\/#!$%^&*;:{}=\-_`~()@+?><\[\]]/g, "")
+
+        infoMsg = InfoMsg.NO_MSG;
+        let realPlatformId = platformId=="" ? MokaPassword.DEFAULT_PLATFORM_ID : platformId
+        switch(generationMode){
+            case "nlse":
+                passwordEOutput = MokaPassword.mokaPasswordV2(passwordInput, distinguishCodeInput,MokaPassword.mappingNLSE,passwordLegend,realPlatformId)
+                break;
+            case "nl":
+                passwordEOutput = MokaPassword.mokaPasswordV2(passwordInput, distinguishCodeInput,MokaPassword.mappingNL,passwordLegend,realPlatformId)
+                break;
+            case "nls":
+                passwordEOutput = MokaPassword.mokaPasswordV2(passwordInput, distinguishCodeInput,MokaPassword.mappingNLS,passwordLegend,realPlatformId)
+                break;
+
         }
     }
 
@@ -96,7 +103,7 @@
         <legend class="fieldset-legend">区分代码 - Distinguish Code</legend>
         <input class="input"
                id="input_key"
-               type="password"
+               type="text"
                bind:value={distinguishCodeInput}
                placeholder="Distinguish Code"/>
     </fieldset>
@@ -127,7 +134,7 @@
 
 <div class="max-w-screen-2xl mt-6 mb-12 ml-6 mr-6 flex flex-nowrap">
 
-    <div tabindex="0" class="collapse collapse-arrow bg-base-100 border-base-300 border">
+    <div class="collapse collapse-arrow bg-base-100 border-base-300 border">
         <input type="checkbox"/>
         <div class="collapse-title font-semibold">高级设置 - Advanced settings</div>
         <div class="collapse-content text-sm flex flex-wrap">
@@ -135,16 +142,16 @@
                 <legend class="fieldset-legend">平台代码 - Platform Id</legend>
                 <input class="input"
                        id="input_password"
-                       type="password"
-                       bind:value={passwordInput}
-                       placeholder="Memory Password"/>
+                       type="text"
+                       bind:value={platformId}
+                       placeholder="takuron.com"/>
             </fieldset>
 
             <div class="max-w-xs w-96 ">
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">密码长度 - Password Length</legend>
                 </fieldset>
-                <input type="range" min="8" max="32" value="16" class="range" step="4"/>
+                <input type="range" min="8" max="32" class="range" step="4" bind:value={passwordLegend}/>
                 <div class="flex justify-between px-2.5 mt-2 text-xs">
                     <span>8</span>
                     <span>12</span>

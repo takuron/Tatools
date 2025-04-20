@@ -95,7 +95,7 @@
         <legend class="fieldset-legend">区分代码 - Distinguish Code</legend>
         <input class="input"
                id="input_key"
-               type="password"
+               type="text"
                bind:value={distinguishCodeInput}
                placeholder="Distinguish Code"/>
     </fieldset>

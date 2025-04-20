@@ -8,7 +8,7 @@
         <h2 class="menu-title">密码工具 - Password Tools</h2>
         <ul>
             <li><a use:active = "{ {className: 'menu-active', inactiveClassName: 'inactive'}}" href="#/seekpassword">SeekPassword</a></li>
-            <li><a use:active = "{ {className: 'menu-active', inactiveClassName: 'inactive'}}" href="#/mokapassword">MokaPassword</a></li>
+            <li><a use:active = "{ {className: 'menu-active', inactiveClassName: 'inactive'}}" href="#/mokapassword">MokaPasswordV2</a></li>
             <li class="menu-disabled" ><a use:active = "{ {className: 'menu-active', inactiveClassName: 'inactive'}}" href="#/randompassword">RandomPassword</a></li>
         </ul>
     </li>

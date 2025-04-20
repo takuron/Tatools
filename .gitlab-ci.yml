@@ -13,10 +13,11 @@ cache:
   paths:
     - .pnpm-store
 
-# 定义名为 'pages' 的作业，用于部署到 GitLab Pages
-build_pages:
+# 定义名为 'deploy_pages' 的作业，用于部署到 GitLab Pages
+deploy_pages:
   stage: deploy
   before_script:
+    # 安装pnpm支持
     - npm install --global corepack@latest
     - corepack enable
     - corepack prepare pnpm@latest-10 --activate
@@ -30,7 +31,6 @@ build_pages:
     # 2. 构建 Vite 项目
     # 通常 Vite 项目的构建命令是 'npm run build'，它会执行 'vite build'
     # Vite 默认将构建产物输出到 'dist' 目录
-    # 如果你使用 yarn，请将 'npm run build' 改为 'yarn build'
     - pnpm run build
 
     # 3. 将构建产物从 'dist' 目录移动到 GitLab Pages 需要的 'public' 目录
