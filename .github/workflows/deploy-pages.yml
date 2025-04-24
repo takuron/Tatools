@@ -1,0 +1,77 @@
+# .github/workflows/deploy-pages.yml
+
+name: Deploy Vite site to Pages # 工作流名称
+
+on:
+  # 在推送到默认分支（通常是 main 或 master）时触发
+  push:
+    branches: [ "main" ] # 根据你的默认分支名称修改 "main"
+  # 允许你从 Actions 选项卡手动运行此工作流
+  workflow_dispatch:
+
+# 设置 GITHUB_TOKEN 的权限，以允许部署到 GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 只允许同时进行一次部署，跳过正在运行和等待中的运行队列
+# 但是，允许取消正在进行的运行以进行新的部署
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # 构建任务
+  build:
+    runs-on: ubuntu-latest # 使用最新的 Ubuntu 运行环境
+    steps:
+      - name: Checkout # 步骤1：检出代码
+        uses: actions/checkout@v4 # 使用官方的 checkout action
+
+      - name: Setup pnpm # 步骤2：设置 pnpm 环境
+        uses: pnpm/action-setup@v4 # 使用 pnpm 官方的 action
+        with:
+          version: latest-10 # 指定 pnpm 版本，与你的 gitlab-ci 类似
+          # 注意: pnpm/action-setup 会自动处理 corepack
+
+      - name: Setup Node.js # 步骤3：设置 Node.js 环境
+        uses: actions/setup-node@v4 # 使用官方的 setup-node action
+        with:
+          node-version: "latest" # 使用最新的 Node.js LTS 版本，或指定具体版本如 '20'
+          cache: 'pnpm' # 自动为 pnpm 配置缓存，基于 pnpm-lock.yaml
+
+      - name: Install dependencies # 步骤4：安装依赖
+        run: pnpm install --frozen-lockfile # 使用 pnpm 安装依赖，推荐在 CI 中使用 --frozen-lockfile
+
+      - name: Build # 步骤5：构建 Vite 项目
+        run: pnpm run build # 运行你的构建脚本 (通常是 vite build)
+        # 假设你的构建输出目录是 'dist'，这是 Vite 的默认值
+
+      # - name: Configure GitHub Pages Base Path (Optional) # 步骤6：(可选) 如果你的仓库是项目站点（不是 user/org 站点），可能需要配置 base path
+      #   # 如果你的 vite.config.js 中的 base 设置为 '/your-repo-name/'，则此步骤通常不需要
+      #   # 如果没有设置，GitHub Actions 可能会尝试自动处理，但显式配置更可靠
+      #   run: |
+      #     # 示例：如果你的仓库名为 my-vite-app，并且部署到 github.com/username/my-vite-app
+      #     # 你可能需要在 vite.config.js 中设置 base: '/my-vite-app/'
+      #     # 如果你的 vite 配置没有处理 base path，可以在这里修改构建产物中的路径
+      #     echo "Skipping base path configuration in Action. Ensure vite.config.js handles 'base' correctly for project sites."
+      #   # 参考 Vite 文档关于 base 选项的说明：https://vitejs.dev/guide/build.html#public-base-path
+
+      - name: Upload artifact # 步骤7：上传构建产物以供部署
+        uses: actions/upload-pages-artifact@v3 # 使用官方的 upload-pages-artifact action
+        with:
+          # 从默认的 'dist' 目录上传。如果你的构建输出目录不同，请修改此路径。
+          path: './dist'
+
+  # 部署任务
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }} # 设置部署环境的 URL
+    runs-on: ubuntu-latest
+    needs: build # 依赖于 'build' 任务成功完成
+    steps:
+      - name: Deploy to GitHub Pages # 步骤1：部署到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 # 使用官方的 deploy-pages action
