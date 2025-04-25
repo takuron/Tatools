@@ -28,7 +28,7 @@ interface PasswordOptions {
  * @returns 生成的随机密码字符串。
  * @throws 如果没有选择任何字符类型或长度小于所需字符类型的数量，则抛出错误。
  */
-function generateRandomPassword(options?: PasswordOptions): string {
+function randomPassword(options?: PasswordOptions): string {
     // --- 默认设置 ---
     const defaults: Required<Omit<PasswordOptions, 'customSymbols'>> & { customSymbols?: string } = {
         length: 16,
