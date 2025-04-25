@@ -3,7 +3,7 @@
 </script>
 
 <ul class="menu bg-base-200 rounded-box w-56">
-    <li><a href="/" use:active = "{ {className: 'menu-active', inactiveClassName: 'inactive'}}">欢迎 - Wealcome</a></li>
+    <li><a href="#/" use:active = "{ {className: 'menu-active', inactiveClassName: 'inactive'}}">欢迎 - Wealcome</a></li>
     <li>
         <h2 class="menu-title">密码工具 - Password Tools</h2>
         <ul>

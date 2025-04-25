@@ -1,6 +1,7 @@
 <script lang="ts">
     import {InfoMsg} from "./PageMokaPassword"
-    import MokaPassword from "../lib/MokaPasswordV2Utils";
+    import {mokaPasswordV2} from "../lib/MokaPasswordV2";
+    import type {MokaPasswordV2Options} from "../lib/MokaPasswordV2";
 
     let passwordInput = $state("")
     let distinguishCodeInput = $state("")
@@ -13,25 +14,42 @@
     let passwordLegend = $state(16)
 
     function handleGenerate() {
-        if (passwordInput == "" || distinguishCodeInput == "") {
+        // 1. 输入验证 (Guard Clause)
+        if (passwordInput === "" || distinguishCodeInput === "") {
             infoMsg = InfoMsg.INPUT_EMPTY;
-            return
+            return;
         }
 
+        // 2. 重置消息
         infoMsg = InfoMsg.NO_MSG;
-        let realPlatformId = platformId=="" ? MokaPassword.DEFAULT_PLATFORM_ID : platformId
-        switch(generationMode){
-            case "nlse":
-                passwordEOutput = MokaPassword.mokaPasswordV2(passwordInput, distinguishCodeInput,MokaPassword.mappingNLSE,passwordLegend,realPlatformId)
-                break;
-            case "nl":
-                passwordEOutput = MokaPassword.mokaPasswordV2(passwordInput, distinguishCodeInput,MokaPassword.mappingNL,passwordLegend,realPlatformId)
-                break;
-            case "nls":
-                passwordEOutput = MokaPassword.mokaPasswordV2(passwordInput, distinguishCodeInput,MokaPassword.mappingNLS,passwordLegend,realPlatformId)
-                break;
 
+        // 3. 验证 generationMode (可选但推荐)
+        const validModes: ReadonlyArray<string> = ["nlse", "nl", "nls"];
+        if (!validModes.includes(generationMode)) {
+            console.error("Invalid generationMode:", generationMode);
+            // 可以设置一个错误消息
+            // infoMsg = InfoMsg.INVALID_MODE;
+            return; // 或者抛出错误
         }
+
+        // 4. 构建基础参数对象
+        // 注意：根据原始代码，mappingType 的值是大写的 ('NLSE', 'NL', 'NLS')
+        //       而 case 语句的值是小写的 ('nlse', 'nl', 'nls')
+        //       所以需要将 generationMode 转换为大写。
+        const options: MokaPasswordV2Options = {
+            passwordSource: passwordInput,
+            distinguishKey: distinguishCodeInput,
+            length: passwordLegend,
+            mappingType: generationMode.toUpperCase() as 'NLSE' | 'NL' | 'NLS', // 转换为大写并断言类型
+        };
+
+        // 5. 条件性地添加 platformId
+        if (platformId !== "") {
+            options.platformId = platformId;
+        }
+
+        // 6. 调用密码生成函数
+        passwordEOutput = mokaPasswordV2(options);
     }
 
     async function handleCopy() {
