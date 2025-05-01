@@ -47,7 +47,7 @@ function randomPassword(options?: PasswordOptions): string {
     const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
     const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const numberChars = '0123456789';
-    const defaultSymbolChars = '!@#$%^&*()_+-=[]{}|;:,.<>?'; // 避免使用反斜杠等可能引起问题的字符
+    const defaultSymbolChars = '!@#$%&*()_+-=[]|;:,.?'; // 避免使用反斜杠等可能引起问题的字符
     const similarChars = '0Oo1lI'; // 易混淆字符列表
 
     // --- 辅助函数：过滤字符 ---

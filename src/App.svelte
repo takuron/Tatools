@@ -4,11 +4,13 @@
     import PageSeekPassword from "./page/PageSeekPassword.svelte";
     import PageMokaPassword from "./page/PageMokaPassword.svelte";
     import Router from "svelte-spa-router";
+    import PageRandomPassword from "./page/PageRandomPassword.svelte";
 
     const routes = {
         '/': Wealcome,
         '/seekpassword': PageSeekPassword,
         '/mokapassword': PageMokaPassword,
+        '/randompassword': PageRandomPassword,
     }
 </script>
 
