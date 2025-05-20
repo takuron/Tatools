@@ -1,27 +1,35 @@
 <script lang="ts">
-    import {generatePassword} from "../lib/SeekPasswordUtils"
+    import {randomPassword} from "../lib/RandomPassword"
     import {InfoMsg} from "./PageSeekPassword"
 
-    let passwordInput = $state("")
-    let distinguishCodeInput = $state("")
-    let passwordEOutput = $state("")
+    // 1. 使用 $state 创建响应式变量来存储每个 checkbox 的状态
+    //    初始值为 boolean 类型 (true 表示选中, false 表示未选中)
+    let useUppercase = $state(true);
+    let useLowercase = $state(true);
+    let useNumbers = $state(true);
+    let useSymbols = $state(false);
+    let excludeSimilarChars = $state(true);
+
+    let passwordEOutput = $state("");
+    let passwordLegend = $state(16);
 
     let infoMsg = $state(InfoMsg.NO_MSG)
 
-    let generationMode = $state("default")
-
     function handleGenerate() {
-        if (passwordInput == "" || distinguishCodeInput == "") {
+        if(!useUppercase&&!useLowercase&&!useNumbers&&!useSymbols){
             infoMsg = InfoMsg.INPUT_EMPTY;
-            return
+            return;
         }
-        if (generationMode == "default") {
-            infoMsg = InfoMsg.NO_MSG;
-            passwordEOutput = generatePassword(passwordInput, distinguishCodeInput)
-        } else {
-            infoMsg = InfoMsg.NO_MSG;
-            passwordEOutput = generatePassword(passwordInput, distinguishCodeInput).replace(/[.,-\/#!$%^&*;:{}=\-_`~()@+?><\[\]]/g, "")
-        }
+
+        infoMsg = InfoMsg.NO_MSG;
+        passwordEOutput = randomPassword({
+            useUppercase:useUppercase,
+            useLowercase:useLowercase,
+            useNumbers:useNumbers,
+            useSymbols:useSymbols,
+            excludeSimilarChars:excludeSimilarChars,
+            length: passwordLegend,
+        });
     }
 
     async function handleCopy() {
@@ -96,19 +104,19 @@
             <legend class="fieldset-legend">使用字符 - Used Chars</legend>
             <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-6">
                 <label class="label">
-                    <input type="checkbox" checked="checked" class="checkbox"/>
+                    <input type="checkbox" bind:checked={useUppercase} class="checkbox"/>
                     A-Z
                 </label>
                 <label class="label">
-                    <input type="checkbox" checked="checked" class="checkbox"/>
+                    <input type="checkbox" bind:checked={useLowercase} class="checkbox"/>
                     a-z
                 </label>
                 <label class="label">
-                    <input type="checkbox" checked="checked" class="checkbox"/>
+                    <input type="checkbox" bind:checked={useNumbers} class="checkbox"/>
                     0-9
                 </label>
                 <label class="label">
-                    <input type="checkbox" class="checkbox"/>
+                    <input type="checkbox" class="checkbox" bind:checked={useSymbols}/>
                     !@#$%&*()_+-=[]|;:,.?
                 </label>
                 <!--                <label class="label">-->
@@ -125,18 +133,19 @@
 
 
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
-        <fieldset class="fieldset">
-            <legend class="fieldset-legend">排除字符 - Platform Id</legend>
-            <input class="input"
-                   id="input_password"
-                   type="text"/>
+        <fieldset class="fieldset bg-base-100 border-base-300 rounded-box border p-4">
+            <legend class="fieldset-legend">排除字符 - Exclude characters</legend>
+            <label class="label">
+                <input type="checkbox" bind:checked={excludeSimilarChars} class="checkbox" />
+                0Oo1lI
+            </label>
         </fieldset>
 
         <div>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">密码长度 - Password Length</legend>
             </fieldset>
-            <input type="range" min="8" max="32" class="range w-full" step="4"/>
+            <input type="range" min="8" max="32" class="range w-full" step="4" bind:value={passwordLegend}/>
             <div class="flex w-full justify-between px-2.5 mt-2 text-xs">
                 <span>8</span>
                 <span>12</span>
